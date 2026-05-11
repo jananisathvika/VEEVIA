@@ -1,12 +1,4 @@
-<p align="center">
-  <img src="logo.png" width="140">
-</p>
-
-<h1 align="center">🏠 Veevia</h1>
-
-<p align="center">
-  Every House Has a Home Inside It
-</p>
+<img src="logo.png" width="140">
 
 # 🏠 Veevia — Every House Has a Home Inside It
 
