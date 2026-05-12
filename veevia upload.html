@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Veevia — Upload Your Room</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    :root{--cr:#F5F0E8;--cb:#3D2B1F;--ct:#C4704F;--cw:#8B6F47;--cs:#7A9E7E;--cd:#EDE5D8;--cw2:#FDFAF5}
+    body{font-family:'DM Sans',sans-serif;background:var(--cr);color:var(--cb);min-height:100vh}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;background:rgba(245,240,232,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(139,111,71,0.1);position:sticky;top:0;z-index:99}
+    .logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--cb);text-decoration:none}
+    .logo span{color:var(--ct)}
+    .back-btn{display:flex;align-items:center;gap:0.4rem;color:var(--cw);font-size:0.82rem;cursor:pointer;border:none;background:none;padding:0.4rem 0.8rem;border-radius:2rem;border:1px solid rgba(139,111,71,0.2);transition:all 0.2s;text-decoration:none}
+    .back-btn:hover{background:var(--cd)}
+    .page{max-width:700px;margin:0 auto;padding:3rem 1.5rem}
+    .page-eyebrow{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ct);margin-bottom:0.5rem;font-weight:500}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--cb);line-height:1.2;margin-bottom:0.6rem}
+    .page-sub{font-size:0.88rem;color:var(--cw);line-height:1.7;font-weight:300;margin-bottom:2rem}
+    .progress-steps{display:flex;align-items:center;justify-content:center;margin-bottom:2.5rem}
+    .step{display:flex;align-items:center;gap:0.5rem}
+    .step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:500}
+    .step.active .step-num{background:var(--ct);color:white}
+    .step.inactive .step-num{background:rgba(139,111,71,0.15);color:var(--cw)}
+    .step-label{font-size:0.7rem;color:var(--cw)}
+    .step.active .step-label{color:var(--ct);font-weight:500}
+    .step-line{width:40px;height:1.5px;background:rgba(139,111,71,0.2);margin:0 0.3rem}
+    .tip-card{background:rgba(122,158,126,0.1);border:1px solid rgba(122,158,126,0.2);border-radius:12px;padding:0.9rem 1.1rem;margin-bottom:1.5rem;display:flex;gap:0.7rem;align-items:flex-start}
+    .tip-text{font-size:0.78rem;color:var(--cw);line-height:1.6}
+    .upload-box{background:var(--cw2);border:2px dashed rgba(196,112,79,0.3);border-radius:20px;padding:3rem;text-align:center;cursor:pointer;transition:all 0.3s;margin-bottom:1.5rem}
+    .upload-box:hover{border-color:var(--ct);background:rgba(196,112,79,0.04)}
+    .upload-box.active{border-color:var(--ct);background:rgba(196,112,79,0.06)}
+    .upload-icon{width:64px;height:64px;background:rgba(196,112,79,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem}
+    .upload-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--cb);margin-bottom:0.4rem}
+    .upload-sub{font-size:0.78rem;color:var(--cw);margin-bottom:1.2rem}
+    .upload-btn{background:var(--ct);color:white;padding:0.7rem 1.6rem;border-radius:2rem;font-size:0.85rem;font-weight:500;border:none;cursor:pointer;transition:all 0.2s}
+    .upload-btn:hover{background:var(--cb)}
+    .upload-or{font-size:0.75rem;color:rgba(139,111,71,0.5);margin:0.8rem 0}
+    .preview-area{display:none;text-align:center;margin-bottom:1.5rem}
+    .preview-area.show{display:block}
+    .preview-img{width:100%;max-height:300px;object-fit:cover;border-radius:14px;margin-bottom:1rem}
+    .form-section{margin-bottom:1.5rem}
+    .form-label{font-size:0.75rem;color:var(--cw);text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.6rem;display:block}
+    .form-input{width:100%;padding:0.8rem 1rem;border-radius:12px;border:1.5px solid rgba(139,111,71,0.2);background:var(--cw2);font-family:'DM Sans',sans-serif;font-size:0.88rem;color:var(--cb);outline:none;transition:border-color 0.2s}
+    .form-input:focus{border-color:var(--ct)}
+    .form-input::placeholder{color:rgba(139,111,71,0.4)}
+    .style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem}
+    .style-chip{padding:0.6rem 0.8rem;border-radius:10px;border:1.5px solid rgba(139,111,71,0.2);background:var(--cw2);font-size:0.78rem;color:var(--cw);cursor:pointer;text-align:center;transition:all 0.2s}
+    .style-chip:hover,.style-chip.selected{border-color:var(--ct);background:rgba(196,112,79,0.08);color:var(--ct);font-weight:500}
+    .budget-row{display:flex;gap:0.7rem;flex-wrap:wrap}
+    .budget-chip{flex:1;min-width:80px;padding:0.7rem;border-radius:10px;border:1.5px solid rgba(139,111,71,0.2);background:var(--cw2);font-size:0.78rem;color:var(--cw);cursor:pointer;text-align:center;transition:all 0.2s}
+    .budget-chip:hover,.budget-chip.selected{border-color:var(--ct);background:rgba(196,112,79,0.08);color:var(--ct);font-weight:500}
+    .submit-btn{width:100%;background:var(--ct);color:white;padding:1rem;border-radius:2rem;font-size:0.95rem;font-weight:500;border:none;cursor:pointer;transition:all 0.25s;font-family:'DM Sans',sans-serif}
+    .submit-btn:hover{background:var(--cb);transform:translateY(-2px)}
+    @media(max-width:600px){
+      nav{padding:0.8rem 1.2rem}
+      .page{padding:2rem 1.2rem}
+      .style-grid{grid-template-columns:repeat(2,1fr)}
+      .step-label{display:none}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">Vee<span>via</span></a>
+  <a class="back-btn" href="index.html">← Back to Home</a>
+</nav>
+
+<div class="page">
+  <div class="progress-steps">
+    <div class="step active">
+      <div class="step-num">1</div>
+      <span class="step-label">Upload Room</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step inactive">
+      <div class="step-num">2</div>
+      <span class="step-label">AI Suggestions</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step inactive">
+      <div class="step-num">3</div>
+      <span class="step-label">Get Designer</span>
+    </div>
+  </div>
+
+  <p class="page-eyebrow">✦ Step 1 of 3</p>
+  <h1 class="page-title">Upload your room photo</h1>
+  <p class="page-sub">Take a clear photo of the room you want to transform. The better the photo, the better the AI suggestions!</p>
+
+  <div class="tip-card">
+    <span>💡</span>
+    <p class="tip-text">Best results: take the photo from a corner of the room, make sure there's good lighting, and capture the full space including walls, floor and ceiling.</p>
+  </div>
+
+  <div class="upload-box" id="uploadBox" onclick="document.getElementById('fileInput').click()">
+    <div class="upload-icon">📸</div>
+    <p class="upload-title">Click to upload your room</p>
+    <p class="upload-sub">JPG, PNG or HEIC — up to 10MB</p>
+    <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('fileInput').click()">Choose Photo</button>
+    <p class="upload-or">or drag and drop here</p>
+    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)"/>
+  </div>
+
+  <div class="preview-area" id="previewArea">
+    <img id="previewImg" class="preview-img" src="" alt="Room preview"/>
+    <div style="display:flex;gap:0.8rem;justify-content:center;margin-bottom:1.5rem">
+      <button class="back-btn" onclick="resetUpload()">Change Photo</button>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">What room is this?</label>
+    <select class="form-input">
+      <option value="" disabled selected>Select room type...</option>
+      <option>Living Room</option>
+      <option>Bedroom</option>
+      <option>Kitchen</option>
+      <option>Bathroom</option>
+      <option>Home Office</option>
+      <option>Dining Room</option>
+      <option>Kids Room</option>
+    </select>
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">What style do you love?</label>
+    <div class="style-grid">
+      <div class="style-chip" onclick="toggleStyle(this)">🌿 Earthy</div>
+      <div class="style-chip" onclick="toggleStyle(this)">✨ Modern</div>
+      <div class="style-chip" onclick="toggleStyle(this)">🏛️ Classic</div>
+      <div class="style-chip" onclick="toggleStyle(this)">🎨 Bohemian</div>
+      <div class="style-chip" onclick="toggleStyle(this)">🪵 Rustic</div>
+      <div class="style-chip" onclick="toggleStyle(this)">🤍 Minimal</div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">What's your budget?</label>
+    <div class="budget-row">
+      <div class="budget-chip" onclick="toggleBudget(this)">Under ₹10k</div>
+      <div class="budget-chip" onclick="toggleBudget(this)">₹10k–₹50k</div>
+      <div class="budget-chip" onclick="toggleBudget(this)">₹50k–₹1L</div>
+      <div class="budget-chip" onclick="toggleBudget(this)">₹1L+</div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <label class="form-label">Tell us more (optional)</label>
+    <textarea class="form-input" rows="3" placeholder="E.g. I want it to feel cozy, I need more storage, I have kids so it needs to be practical..."></textarea>
+  </div>
+
+  <button class="submit-btn" onclick="window.location.href='suggestions.html'">Get My AI Suggestions ✨</button>
+</div>
+
+<script>
+  function handleFile(e){
+    const file=e.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      document.getElementById('previewImg').src=ev.target.result;
+      document.getElementById('uploadBox').style.display='none';
+      document.getElementById('previewArea').classList.add('show');
+    }
+    reader.readAsDataURL(file);
+  }
+  function resetUpload(){
+    document.getElementById('uploadBox').style.display='block';
+    document.getElementById('previewArea').classList.remove('show');
+    document.getElementById('fileInput').value='';
+  }
+  function toggleStyle(el){el.classList.toggle('selected')}
+  function toggleBudget(el){
+    document.querySelectorAll('.budget-chip').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  const box=document.getElementById('uploadBox');
+  box.addEventListener('dragover',e=>{e.preventDefault();box.classList.add('active')});
+  box.addEventListener('dragleave',()=>box.classList.remove('active'));
+  box.addEventListener('drop',e=>{
+    e.preventDefault();box.classList.remove('active');
+    const file=e.dataTransfer.files[0];
+    if(file){handleFile({target:{files:[file]}})}
+  });
+</script>
+</body>
+</html>
